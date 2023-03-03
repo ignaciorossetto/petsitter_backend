@@ -41,7 +41,6 @@ app.use(cookieParser('asdasd'))
 app.use(cookieSession({
     secret: 'asdasd',
     httpOnly: true,
-    sameSite: "none",
     domain: ".onrender.com"
 }))
 
