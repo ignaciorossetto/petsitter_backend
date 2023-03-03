@@ -32,7 +32,7 @@ mongoose.connection.on('connected', ()=>{
 })
 
 const corsOptions = {
-    origin: config.feUrl, //included origin as true
+    origin: 'https://petsitterfinde.onrender.com', //included origin as true
     methods: "GET,POST,PUT,DELETE",
     credentials: true, //included credentials as true
 };
