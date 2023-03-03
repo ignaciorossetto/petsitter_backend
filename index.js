@@ -32,7 +32,7 @@ mongoose.connection.on('connected', ()=>{
 })
 
 const corsOptions = {
-    origin: 'https://petsitterfinde.onrender.com', //included origin as true
+    origin: config.feUrl, //included origin as true
     methods: "GET,POST,PUT,DELETE",
     credentials: true, //included credentials as true
 };
@@ -74,4 +74,6 @@ app.use((err,req,res,next)=>{
 app.listen(config.port, async() => { 
     await connectDB()
     console.log(`Server running on port ${config.port}...`);
+    console.log(config.url);
+    console.log(config.feUrl);
 })
