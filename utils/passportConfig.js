@@ -139,7 +139,8 @@ const initializePassport = () => {
                     email: profile._json.email,
                     password: '',
                     pets: [],
-                    strategy: 'google'
+                    strategy: 'google',
+                    profileImg: profile.photos[0].value
                 }
                 const result = await UserModel.create(newUser)
                 req.user = result

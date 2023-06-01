@@ -1,4 +1,5 @@
 import mongoose, { Schema } from "mongoose";
+import config from '../utils/config.js'
 
 const userCollection = 'users'
 
@@ -29,6 +30,10 @@ const UserSchema = new Schema({
     admin:{
         type: Boolean,
         default:false
+    },
+    profileImg:{
+        type: String,
+        default: config.profileImg
     },
     pets: {
         type: [{ type : Schema.Types.ObjectId, ref: 'pets' }]

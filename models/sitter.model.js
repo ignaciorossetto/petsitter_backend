@@ -1,4 +1,6 @@
 import mongoose, { Schema } from "mongoose";
+import config from '../utils/config.js'
+
 
 const sitterCollection = 'sitters'
 
@@ -40,6 +42,10 @@ const SitterSchema = new Schema({
     },
     desc: {
         type: String,
+    },
+    profileImg:{
+        type: String,
+        default: config.profileImg
     }
 }, {timestamps: true})
 

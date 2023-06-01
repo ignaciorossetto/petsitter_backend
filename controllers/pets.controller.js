@@ -36,10 +36,11 @@ export const createPet = async(req,res, next) => {
  }
 
 export const updatePet = async(req,res, next)=>{
-
+    console.log(req.body);
+    console.log(req.params);
     try {
-        const response = await PetModel.findByIdAndUpdate(req.params.id, {$set: req.body}, {new:true})
-          
+        const response = await PetModel.findByIdAndUpdate(req.params.pid, {$set: req.body}, {new:true})
+          console.log(response);
         res.status(200).json(response)
     } catch (error) {
         next(error)
@@ -83,7 +84,7 @@ export const getPet = async(req,res, next)=>{
 export const getAllPets = async(req,res, next)=>{
     let filter = {}
     filter.type = req.query.type
-    filter.milisecondsDates = {$gt: Number(new Date())}
+    filter.milisecondsDates = {$gt: Number(new Date())} 
     if(req.query.size){
         filter.size = req.query.size  
     }

@@ -18,11 +18,7 @@ export const login = async (req,res,next) => {
     if(!req.user) return res.status(401).send('Invalid credentials')
     const { password, ...other } = req.user._doc
     const access_token = generateToken(other)
-    res.cookie('access_token', access_token ,{
-        sameSite: 'none',
-        domain: "petsitterfinde.onrender.com",
-        signed: true
-    }).status(200).json({
+    res.cookie('access_token', access_token).status(200).json({
         success: true,
         message: 'Logged in',
         payload: other

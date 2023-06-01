@@ -5,6 +5,8 @@ import authRoute from './routes/auth.route.js'
 import usersRoute from './routes/users.route.js'
 import petsRoute from './routes/pets.route.js'
 import sittersRoute from './routes/pets.route.js'
+import conversationRoute from './routes/conversations.route.js'
+import messageRoute from './routes/messages.route.js'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import config from './utils/config.js'
@@ -32,7 +34,7 @@ mongoose.connection.on('connected', ()=>{
 })
 
 const corsOptions = {
-    origin: 'https://petsitterfinde.onrender.com', //included origin as true
+    origin: 'http://localhost:3000', //included origin as true
     methods: "GET,POST,PUT,DELETE",
     credentials: true, //included credentials as true
 };
@@ -41,7 +43,6 @@ app.use(cookieParser('asdasd'))
 app.use(cookieSession({
     secret: 'asdasd',
     httpOnly: true,
-    domain: ".onrender.com"
 }))
 
 app.use('/static', express.static('public'))
@@ -58,6 +59,8 @@ app.use('/api/auth', authRoute)
 app.use('/api/users', usersRoute)
 app.use('/api/pets', petsRoute)
 app.use('/api/sitters', sittersRoute)
+app.use('/api/conversations', conversationRoute)
+app.use('/api/messages', messageRoute)
 
 app.use((err,req,res,next)=>{
     const errorStatus = err.status || 500

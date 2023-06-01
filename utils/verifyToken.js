@@ -26,7 +26,7 @@ export const verifyToken = (req,res, next) => {
         if(err){
             return next(createError(403, 'Token is not valid'))
         }
-        req.user = user
+        req.user = user.user
         next()
     })
 
@@ -56,9 +56,9 @@ export const verifyPetOwner = (req,res,next) => {
     verifyToken (req, res, async()=> {
         if(req.user.admin) {
             next()
-        }else if(req.user.id === req.params.id){    
+        }else if(req.user._id === req.params.id){    
             const {pets} = await UserModel.findById(req.params.id)
-            if(pets.includes(req.params.pid)){
+            if(pets.some(e => e._id == req.params.pid)){
                 return next()
             }
             next(createError(403, 'You are not the owner of that pet!!'))

@@ -12,4 +12,5 @@ export default {
     googleClientSecret: process.env.GOOGLE_CLIENT_SECRET,
     googleCallBackUrlEndpoint: process.env.GOOGLE_CALLBACK_URL_ENDPOINT,
     jwtSecret: process.env.JWT_SECRET,
+    profileImg : process.env.DEFAULT_PROFILE_IMG
 }
