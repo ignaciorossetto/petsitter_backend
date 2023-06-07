@@ -3,6 +3,17 @@ import config from '../utils/config.js'
 
 const userCollection = 'users'
 
+const LatLntSchema = new Schema({
+    lat: Number,
+    lng: Number
+  });
+  
+const AddressSchema = new Schema({
+    address: String,
+    latLnt: LatLntSchema,
+  });
+
+
 const UserSchema = new Schema({
     username:{
         type:String,
@@ -17,6 +28,15 @@ const UserSchema = new Schema({
         unique:true,
         immutable: true,
     },
+    fullAddress:{
+        address: {
+            type: String
+        },
+        latLng: {
+            lat: {type: Number},
+            lng: {type: Number}
+          },
+      },
     type:{
         type:String,
         required: true,
@@ -41,6 +61,10 @@ const UserSchema = new Schema({
     strategy: {
         type: String,
         required: true
+    },
+    confirmedAccount: {
+        type: Boolean,
+        default: false
     }
 }, {timestamps: true})
 

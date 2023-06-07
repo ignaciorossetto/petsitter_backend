@@ -7,6 +7,7 @@ import { UserModel } from '../models/user.model.js'
 import { cookieExtractor } from './verifyToken.js'
 import { createHash, isValidPassword } from './hashPass.js'
 import { SitterModel } from '../models/sitter.model.js'
+import { confirmUserByMail } from './mail.js'
 
 
 const LocalStrategy = local.Strategy
@@ -33,9 +34,11 @@ const initializePassport = () => {
                 password: hash,
                 pets: [],
                 strategy: 'local',
-                newsCheckBox: req.body.newsCheckBox
+                newsCheckBox: req.body.newsCheckBox,
+                fullAddress: req.body.fullAddress
             }
             const result = await UserModel.create(newUser)
+            await confirmUserByMail(result)
             req.user = result
             return done(null, result) 
         } catch (error) {

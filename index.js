@@ -39,10 +39,14 @@ const corsOptions = {
     credentials: true, //included credentials as true
 };
 
+//'https://www.petsitterfinder.com.ar'
+
 app.use(cookieParser('asdasd'))
 app.use(cookieSession({
-    secret: 'asdasd',
-    httpOnly: true,
+        secret: 'asdasd',
+        httpOnly: true,
+        sameSite: 'none',
+        domain: 'petsitterfinder.com.ar'
 }))
 
 app.use('/static', express.static('public'))

@@ -4,7 +4,7 @@ import { createError } from './error.js'
 import config from './config.js'
 
 export const generateToken = (user) => {
-    const token = jwt.sign({user}, config.jwtSecret, {expiresIn: '24h'})
+    const token = jwt.sign({user}, config.jwtSecret, {expiresIn: '1m'})
     return token
 }
 
