@@ -3,8 +3,12 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "test": "mocha --recursive --timeout 60000 --exit",
     "start": "nodemon index.js"
   },
+  "keywords": [
+    "mocha"
+  ],
   "author": "",
   "license": "ISC",
   "description": "",
@@ -26,5 +30,11 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0"
   },
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "chai": "^4.3.7",
+    "faker": "^6.6.6",
+    "mocha": "^10.2.0"
+  }
 }

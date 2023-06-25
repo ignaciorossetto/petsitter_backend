@@ -3,17 +3,6 @@ import config from '../utils/config.js'
 
 const userCollection = 'users'
 
-const LatLntSchema = new Schema({
-    lat: Number,
-    lng: Number
-  });
-  
-const AddressSchema = new Schema({
-    address: String,
-    latLnt: LatLntSchema,
-  });
-
-
 const UserSchema = new Schema({
     username:{
         type:String,

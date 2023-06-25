@@ -92,7 +92,7 @@ export const logOut = async (req, res, next) => {
     });
 };
 
-export const checkAccountVerif = async (req,res,next) => {
+export const checkAccountVerif = async (req,res,next) => { 
   const token = req.body.token;
   const email = req.body.email;
   try {
@@ -101,10 +101,12 @@ export const checkAccountVerif = async (req,res,next) => {
        next(createError(404, 'User not found!'))
        return
     }
+    // if(user.confirmedAccount) {
+    //   next(createError(400, 'User is already confirmed!'))
+    // }
     const userAuth = checkMailConfirmation(token, user)
     if (!userAuth) {
-       next(createError(400, 'Token expired'))
-       return
+       next(createError(401, 'Token expired'))
     }
     try {
       await UserModel.findByIdAndUpdate(user._id, {
@@ -128,9 +130,9 @@ export const resendConfirmationEmail = async(req,res,next) => {
       if (!user) {
         next(createError(404, 'User not found!'))
       }
-      if(user.confirmedAccount) {
-        next(createError(400, 'User is already confirmed!'))
-      }
+      // if(user.confirmedAccount) {
+      //   next(createError(400, 'User is already confirmed!'))
+      // }
       await confirmUserByMail(user)
       res.json({
         status:200,

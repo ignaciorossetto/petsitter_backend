@@ -34,10 +34,11 @@ mongoose.connection.on('connected', ()=>{
 })
 
 const corsOptions = {
-    origin: 'http://localhost:3000', //included origin as true
+    origin: config.feUrl, //included origin as true
     methods: "GET,POST,PUT,DELETE",
     credentials: true, //included credentials as true
 };
+
 
 //'https://www.petsitterfinder.com.ar'
 
@@ -48,7 +49,7 @@ app.use(cookieSession({
         sameSite: 'none',
         domain: 'petsitterfinder.com.ar'
 }))
-
+console.log(config.mailUser)
 app.use('/static', express.static('public'))
 
 initializePassport()

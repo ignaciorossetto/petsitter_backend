@@ -62,9 +62,11 @@ const initializePassport = () => {
                 email: username,
                 password: hash,
                 strategy: 'local',
-                newsCheckBox: req.body.newsCheckBox
+                newsCheckBox: req.body.newsCheckBox,
+                fullAddress: req.body.fullAddress
             }
             const result = await SitterModel.create(newUser)
+            await confirmUserByMail(result)
             req.user = result
             return done(null, result) 
         } catch (error) {
@@ -143,7 +145,9 @@ const initializePassport = () => {
                     password: '',
                     pets: [],
                     strategy: 'google',
-                    profileImg: profile.photos[0].value
+                    profileImg: profile.photos[0].value,
+                    confirmedAccount: true,
+                    fullAddress: undefined
                 }
                 const result = await UserModel.create(newUser)
                 req.user = result
