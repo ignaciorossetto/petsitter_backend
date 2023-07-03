@@ -27,9 +27,10 @@ export const login = async (req, res, next) => {
   res
     .cookie("access_token", access_token, {
       sameSite: "none",
+      httpOnly:true,
       secure: true,
       maxAge: expireTime,
-      domain: 'petsitterfinder.com.ar',
+      domain: 'https://www.petsitterfinder.com.ar',
       path:'/',
       signed: true
     })
