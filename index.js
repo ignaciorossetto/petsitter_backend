@@ -82,6 +82,4 @@ app.use((err,req,res,next)=>{
 app.listen(config.port, async() => { 
     await connectDB()
     console.log(`Server running on port ${config.port}...`);
-    console.log(config.url);
-    console.log(config.feUrl);
 })

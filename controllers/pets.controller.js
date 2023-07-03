@@ -3,7 +3,6 @@ import { UserModel } from "../models/user.model.js";
 import config from "../utils/config.js";
 import { createError } from "../utils/error.js";
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import {getStorage, ref, getDownloadURL, uploadBytesResumable} from 'firebase/storage'
 
 
