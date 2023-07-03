@@ -33,12 +33,12 @@ mongoose.connection.on('connected', ()=>{
     console.log('server connected');
 })
 
-const corsOptions = {
-    origin: config.feUrl, //included origin as true
-    
-    //included credentials as true
-};
-app.use(cors('*'))
+app.use(
+    cors({
+        origin: ['http://localhost:3000', config.feUrl],
+        credentials: true,
+    })
+  )
 
 
 //'https://www.petsitterfinder.com.ar/'
