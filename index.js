@@ -35,7 +35,7 @@ mongoose.connection.on('connected', ()=>{
 
 app.use(
     cors({
-        origin: ['https://www.petsitterfinder.com.ar'],
+        origin: ['http://localhost:3000','https://www.petsitterfinder.com.ar', 'https://www.petsitterfinder.com.ar/'],
         credentials: true,
         methods: 'POST,PUT,DELETE,PATCH,OPTIONS'
     })
