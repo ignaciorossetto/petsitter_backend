@@ -29,6 +29,7 @@ export const login = async (req, res, next) => {
       sameSite: "none",
       secure: true,
       maxAge: expireTime,
+      domain: '.petsitterfinder.com.ar'
     })
     .status(200)
     .json({
@@ -46,6 +47,7 @@ export const sitterLogin = async (req, res, next) => {
     sameSite: "none",
     secure: true,
     maxAge: new Date(Date.now() + 900000),
+    domain: '.petsitterfinder.com.ar'
   }).status(200).json({
     success: true,
     message: "Logged in",
@@ -63,6 +65,7 @@ export const googleLoginCallback = async (req, res) => {
       sameSite: "none",
       secure: true,
       maxAge: expireTime,
+      domain: '.petsitterfinder.com.ar'
     })
     .redirect(`${config.feUrl}?login-google=true`);
 };
@@ -72,7 +75,12 @@ export const updateUserInfo = async (req, res, next) => {
   const { password, ...other } = response._doc;
   req.user = other;
   const access_token = generateToken(other);
-  res.status(200).cookie("access_token", access_token).json({
+  res.status(200).cookie("access_token", access_token, {
+    sameSite: "none",
+    secure: true,
+    maxAge: expireTime,
+    domain: '.petsitterfinder.com.ar'
+  }).json({
     success: true,
     payload: req.user,
   });
