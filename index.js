@@ -35,12 +35,10 @@ mongoose.connection.on('connected', ()=>{
 
 const corsOptions = {
     origin: config.feUrl, //included origin as true
-    methods: "GET,POST,PUT,DELETE,OPTIONS",
-    credentials: true, 
     
     //included credentials as true
 };
-app.use(cors(corsOptions))
+app.use(cors('*'))
 
 
 //'https://www.petsitterfinder.com.ar/'
