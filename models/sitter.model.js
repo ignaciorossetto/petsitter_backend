@@ -4,6 +4,16 @@ import config from '../utils/config.js'
 
 const sitterCollection = 'sitters'
 
+const GeoSchema = new Schema({
+    type: {
+      type: String,
+      default: 'Point'
+    },
+    coordinates: {
+      type: [Number]
+    }
+  });  
+
 const SitterSchema = new Schema({
     username:{
         type:String,
@@ -11,6 +21,10 @@ const SitterSchema = new Schema({
     },
     password:{
         type:String,        
+    },
+    location: {
+        type: GeoSchema,
+        index: '2dsphere'
     },
     email:{
         type:String,
@@ -32,10 +46,6 @@ const SitterSchema = new Schema({
         type: Boolean,
         default:false
     },
-    rate: {
-        type: [Number],
-        default:[]
-    },
     strategy: {
         type: String,
         required: true
@@ -44,11 +54,16 @@ const SitterSchema = new Schema({
         type: String,
     },
     profileImg:{
-        type: String,
-        default: config.profileImg
+        type: String
+    },
+    citas:{
+        type:[{ type : Schema.Types.ObjectId, ref: 'citas' }]
+    },
+    price: {
+        type: Number
     }
 }, {timestamps: true})
 
-
+SitterSchema.index({location: '2dsphere'})
 
 export const SitterModel = mongoose.model(sitterCollection, SitterSchema) 

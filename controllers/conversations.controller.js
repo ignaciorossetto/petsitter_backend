@@ -5,7 +5,8 @@ import { createError } from '../utils/error.js'
 
 
 //Create new conversation or response the existing one
-export const createOrGetConv = async (req,res)=> {
+export const 
+createOrGetConv = async (req,res)=> {
     try {
         const response = await ConversationModel.find({
             members: {$all : [req.body.receiverId, req.body.senderId]}
@@ -37,23 +38,12 @@ export const getAllConvs = async(req,res)=> {
 //Get the information of the receiver
 export const getReceiverInfo = async(req,res)=> {
     try {
-        if (req.params?.friendId) {
-            if (req.query?.type === 'user') {
-                const friend = await SitterModel.findById(req.params?.friendId)
-
+            const friend = await SitterModel.findById(req.params?.friendId)
                 const {password, ...other} = friend?._doc
                 return  res.status(200).json(other)
-            }
-            else if (req.query?.type === 'sitter') {
-                const friend = await UserModel.findById(req.params?.friendId)
-
-                const {password, ...other} = friend?._doc
-                return res.status(200).json(other)
-            }
         }
         
-    } catch (error) {
-        console.log(error)
+     catch (error) {
         createError(500, 'Could not send message')        
         
     }

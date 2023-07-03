@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import config from '../utils/config.js'
 
 const userCollection = 'users'
 
@@ -42,7 +41,7 @@ const UserSchema = new Schema({
     },
     profileImg:{
         type: String,
-        default: config.profileImg
+        default: undefined
     },
     pets: {
         type: [{ type : Schema.Types.ObjectId, ref: 'pets' }]
@@ -59,6 +58,9 @@ const UserSchema = new Schema({
 
 
 UserSchema.pre('findOne', function() {
+    this.populate('pets')
+  })
+UserSchema.pre('findByIdAndUpdate', function() {
     this.populate('pets')
   })
 

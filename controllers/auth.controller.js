@@ -21,14 +21,14 @@ export const sitterRegister = async (req, res, next) => {
 export const login = async (req, res, next) => {
   if (!req.user) return res.status(401).send("Invalid credentials");
   const { password, ...other } = req.user._doc;
-  const access_token = generateToken(other);
-  // Expire time: 15 min
-  const expireTime = new Date(Date.now() + 900000);
+  const access_token = generateToken(other._id +'@_@'+ other.username);
+  // Expire of cookie time: 15 min ---- is different than the one of jwt
+  const expireTime = new Date(Date.now() + 90000);
   res
     .cookie("access_token", access_token, {
       sameSite: "none",
       secure: true,
-      maxAge: new Date(Date.now() + 900000),
+      maxAge: expireTime,
     })
     .status(200)
     .json({
@@ -56,10 +56,15 @@ export const sitterLogin = async (req, res, next) => {
 export const googleLoginCallback = async (req, res) => {
   if (!req.user) return res.status(401).send("Invalid credentials");
   const { password, ...other } = req.user._doc;
-  const access_token = generateToken(other);
+  const access_token = generateToken(other._id +'@_@'+ other.username)
+  const expireTime = new Date(Date.now() + 90000);
   res
-    .cookie("access_token", access_token)
-    .redirect(`${config.feUrl}/?loginG=success`);
+    .cookie("access_token", access_token, {
+      sameSite: "none",
+      secure: true,
+      maxAge: expireTime,
+    })
+    .redirect(`${config.feUrl}?login-google=true`);
 };
 
 export const updateUserInfo = async (req, res, next) => {
@@ -74,6 +79,13 @@ export const updateUserInfo = async (req, res, next) => {
 };
 
 export const checkAuth = async (req, res, next) => {
+  res.status(200).json({
+    success: true,
+    payload: req.user,
+  });
+};
+
+export const googleLoginAuthSendUser = async (req, res, next) => {
   res.status(200).json({
     success: true,
     payload: req.user,

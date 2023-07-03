@@ -17,7 +17,7 @@ import uploadImgToServer from "../utils/multerConfig.js";
 
  
 //CREATE
-router.post('/', passportCall('jwt'), uploadImgToServer.array('images'), createPet)
+router.post('/', uploadImgToServer.array('images'), createPet)
 //UPDATE
 router.put('/:id',passportCall('jwt'), updatePet)
 //DELETE

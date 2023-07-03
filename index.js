@@ -4,7 +4,7 @@ import mongoose from 'mongoose'
 import authRoute from './routes/auth.route.js'
 import usersRoute from './routes/users.route.js'
 import petsRoute from './routes/pets.route.js'
-import sittersRoute from './routes/pets.route.js'
+import sittersRoute from './routes/sitters.route.js'
 import conversationRoute from './routes/conversations.route.js'
 import messageRoute from './routes/messages.route.js'
 import cookieParser from 'cookie-parser'
@@ -47,9 +47,8 @@ app.use(cookieSession({
         secret: 'asdasd',
         httpOnly: true,
         sameSite: 'none',
-        domain: 'petsitterfinder.com.ar'
 }))
-console.log(config.mailUser)
+
 app.use('/static', express.static('public'))
 
 initializePassport()

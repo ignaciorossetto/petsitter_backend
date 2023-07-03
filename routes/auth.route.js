@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { register, login, googleLoginCallback, checkAuth, updateUserInfo, sitterRegister, sitterLogin, logOut, checkAccountVerif, resendConfirmationEmail } from "../controllers/auth.controller.js";
+import { register, login, googleLoginCallback, checkAuth, updateUserInfo, sitterRegister, sitterLogin, logOut, checkAccountVerif, resendConfirmationEmail, googleLoginAuthSendUser } from "../controllers/auth.controller.js";
 import config from "../utils/config.js";
 import passportCall from "../utils/passportCall.js";
 
@@ -15,7 +15,8 @@ router.get('/checkauth',passportCall('jwt'), checkAuth)
 router.get('/updateUser',passportCall('jwt'), updateUserInfo)
 router.get('/logout', logOut)
 router.get('/google',passportCall('google', {prompt : "select_account"}), (req,res)=>{})
-router.get('/google/callback',passportCall('google', {successRedirect: config.feUrl ,failureRedirect: `${config.feUrl}/login?loginGoogle=failed`}), googleLoginCallback)
+router.get('/google/callback',passportCall('google', {failureRedirect: `${config.feUrl}/login?loginGoogle=failed`}), googleLoginCallback)
+router.get('/google/login',passportCall('jwt-google'), googleLoginAuthSendUser)
 
 
 export default router

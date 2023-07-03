@@ -2,38 +2,55 @@ import { PetModel } from "../models/pet.model.js";
 import { UserModel } from "../models/user.model.js";
 import config from "../utils/config.js";
 import { createError } from "../utils/error.js";
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+import {getStorage, ref, getDownloadURL, uploadBytesResumable} from 'firebase/storage'
 
 
 
 export const createPet = async(req,res, next) => { 
+    const app = initializeApp(config.firebaseConfig);
+    const storage = getStorage()
     const{...petInfo} = req.body
-    const petArray = req.files.map(element => {
-        const imgPath = `${config.url}/${element.destination}/${element.originalname}`
-        const refactoredimgPath = imgPath.replace('public', 'static')
-        return refactoredimgPath
-    });
+    let petArray = []
+    for await (const element of req.files) {
+        const storageRef = ref(storage, `profile/${petInfo.ownerId}/pets/${element.originalname}`)
+        const metadata = {
+            contentType: element.mimetype
+        }
+        const snapshot = await uploadBytesResumable(storageRef, element.buffer, metadata)
+        const downloadURL = await getDownloadURL(snapshot.ref)
+        petArray.push(downloadURL) 
+    }
     petInfo.images = petArray
     if(petInfo.dates){
         petInfo.dates = JSON.parse(petInfo.dates[1])
     }
+
     try {
+        let updatedUser
         const response = await PetModel.create(petInfo)
         if (!response) {
             throw Error
         }
         try {
-           await UserModel.findByIdAndUpdate(petInfo.ownerId, {$push : {
+            updatedUser = await UserModel.findByIdAndUpdate(petInfo.ownerId, {$push : {
                 pets: response._id
-            }})
+            }}, {new:true}).populate('pets')
         } catch (error) {
           next(error)
         }
-
-        res.status(200).json(response)
+        const {password, ...other } = updatedUser._doc
+        res.status(200).json({
+            status: 'OK',
+            payloadUser: other,
+            payloadPet: response
+        })
     } catch (error) {
         next(error)
     }
  }
+
 
 export const updatePet = async(req,res, next)=>{
     console.log(req.body);
@@ -53,14 +70,18 @@ export const deletePet = async(req,res, next)=>{
 
     try {
         const response = await PetModel.findByIdAndDelete(petId)
+        let user 
         try {
-            await UserModel.findByIdAndUpdate(userId, {$pull : {
+            user = await UserModel.findByIdAndUpdate(userId, {$pull : {
                 pets: petId
-            }})
+            }}, {new:true}).populate('pets')
         } catch (error) {
           return next(error)
         }   
-        res.status(200).json("Pet deleted")
+        res.status(200).json({
+            status: "Pet deleted",
+            payload: user
+        })
     } catch (error) {
         next(error)
     }

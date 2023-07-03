@@ -160,13 +160,24 @@ const initializePassport = () => {
 
     passport.use('jwt', new JWTStrategy({
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
-        secretOrKey: config.jwtSecret
+        secretOrKey: config.jwtSecret,
     }, (jwt_payload, done)=> {
-        const user = jwt_payload.user
         try {
-            return done(null, user)
+            return done(null, jwt_payload)
         } catch (error) {
-            console.log(error);
+            return done(error)
+        }
+    }
+    ))
+    passport.use('jwt-google', new JWTStrategy({
+        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+        secretOrKey: config.jwtSecret,
+    }, async(jwt_payload, done)=> {
+        try {
+            const id = jwt_payload?.user?.split('@_@')[0]
+            const user = await UserModel.findById(id) 
+            return done(null, user._doc)
+        } catch (error) {
             return done(error)
         }
     }

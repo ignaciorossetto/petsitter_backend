@@ -9,6 +9,6 @@ const storage = multer.diskStorage({
     },
   });
 
-const uploadImgToServer = multer({ storage: storage });
+const uploadImgToServer = multer({ storage: multer.memoryStorage() });
 
 export default uploadImgToServer
