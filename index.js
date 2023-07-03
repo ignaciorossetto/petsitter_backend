@@ -34,8 +34,7 @@ mongoose.connection.on('connected', ()=>{
 })
 
 const corsOptions = {
-    origin: config.feUrl, //included origin as true
-    allowedHeaders: ['Content-Type', 'Origin', 'X-Requested-With', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
+    origin: 'https://www.petsitterfinder.com.ar', //included origin as true
     credentials: true, 
     //included credentials as true
 };
