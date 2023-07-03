@@ -39,6 +39,7 @@ const corsOptions = {
     //included credentials as true
 };
 
+app.use(cors(corsOptions))
 
 //'https://www.petsitterfinder.com.ar/'
 
@@ -57,7 +58,6 @@ app.use(passport.session())
 
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
-app.use(cors(corsOptions))
 
 app.use('/api/auth', authRoute)
 app.use('/api/users', usersRoute)
