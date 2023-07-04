@@ -50,6 +50,7 @@ app.use(cookieSession({
         secret: 'asdasd',
         httpOnly: true,
         sameSite: 'none',
+        domain: '.onrender.com"'
 }))
 
 app.use('/static', express.static('public'))
