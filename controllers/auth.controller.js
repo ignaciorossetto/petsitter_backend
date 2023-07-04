@@ -30,7 +30,7 @@ export const login = async (req, res, next) => {
       secure: true,
       signed:true,
       maxAge: expireTime,
-      domain: '.petsitterfinder-backend.onrender.com',
+      domain: 'petsitterfinder-backend.onrender.com',
       httpOnly: true,
     })
     .status(200)
