@@ -26,12 +26,9 @@ export const login = async (req, res, next) => {
   const expireTime = 24 * 60 * 60 * 1000;
   res
     .cookie("access_token", access_token, {
-      sameSite: "none",
-      secure: true,
-      signed:true,
-      maxAge: expireTime,
-      domain: '.onrender.com',
-      httpOnly: true,
+        sameSite: 'none',
+        domain: "petsitterfinder-backend.onrender.com",
+        signed: true
     })
     .status(200)
     .json({
