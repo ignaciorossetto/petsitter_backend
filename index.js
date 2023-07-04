@@ -49,6 +49,7 @@ app.use(cookieSession({
         secret: 'asdasd',
         httpOnly: true,
         sameSite: 'none',
+        domain: config.feUrl
 }))
 
 app.use('/static', express.static('public'))
