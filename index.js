@@ -49,7 +49,7 @@ app.use(cookieSession({
         secret: 'asdasd',
         httpOnly: true,
         sameSite: 'none',
-        domain: config.feUrl
+        domain: '.petsitterfinder.com.ar'
 }))
 
 app.use('/static', express.static('public'))
