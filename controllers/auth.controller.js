@@ -28,9 +28,9 @@ export const login = async (req, res, next) => {
     .cookie("access_token", access_token, {
       sameSite: "none",
       secure: true,
+      signed:true,
       maxAge: expireTime,
       domain: '.petsitterfinder-backend.onrender.com',
-      path:'/',
       httpOnly: true,
     })
     .status(200)
