@@ -31,6 +31,7 @@ export const login = async (req, res, next) => {
       maxAge: expireTime,
       domain: '.petsitterfinder-backend.onrender.com',
       path:'/',
+      httpOnly: true,
     })
     .status(200)
     .json({
