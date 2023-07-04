@@ -62,6 +62,9 @@ app.use(passport.session())
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
+app.get('/', (req,res)=>res.json({
+    message: 'hola'
+}))
 app.use('/api/auth', authRoute)
 app.use('/api/users', usersRoute)
 app.use('/api/pets', petsRoute)
