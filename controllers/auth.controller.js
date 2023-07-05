@@ -122,9 +122,9 @@ export const checkAccountVerif = async (req,res,next) => {
        next(createError(404, 'User not found!'))
        return
     }
-    // if(user.confirmedAccount) {
-    //   next(createError(400, 'User is already confirmed!'))
-    // }
+    if(user?.confirmedAccount) {
+      next(createError(400, 'User is already confirmed!'))
+    }
     const userAuth = checkMailConfirmation(token, user)
     if (!userAuth) {
        next(createError(401, 'Token expired'))
@@ -149,11 +149,11 @@ export const resendConfirmationEmail = async(req,res,next) => {
     try {
       const user = await UserModel.findOne({email: req.body.email})
       if (!user) {
-        next(createError(404, 'User not found!'))
+        next(createError(404, 'Mail inexistente!'))
       }
-      // if(user.confirmedAccount) {
-      //   next(createError(400, 'User is already confirmed!'))
-      // }
+      if(user?.confirmedAccount) {
+        next(createError(400, 'Usuario ya está confirmado!'))
+      }
       await confirmUserByMail(user)
       res.json({
         status:200,

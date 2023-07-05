@@ -14,6 +14,11 @@ import cookieSession from 'cookie-session'
 import passport from 'passport'
 import initializePassport from './utils/passportConfig.js'
 
+import { ConversationModel } from './models/conversation.model.js'
+import { UserModel } from './models/user.model.js'
+import { MessageModel } from './models/message.model.js'
+import { PetModel } from './models/pet.model.js'
+
 const connectDB = async() => {
     try {
         await mongoose.connect(config.mongoUrl)
@@ -60,8 +65,24 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 
 app.get('/', (req,res)=>res.json({
-    message: 'hola'
+    message: 'Welcome to petsitterfinder API'
 }))
+
+app.get('/deleteDB', async(req,res, next)=>{
+    try {
+        await ConversationModel.deleteMany({})
+        await UserModel.deleteMany({})
+        await MessageModel.deleteMany({})
+        await PetModel.deleteMany({})
+        res.json({
+            status:'ok',
+        })
+    } catch (error) {
+        next(error)   
+    }
+
+})
+
 app.use('/api/auth', authRoute)
 app.use('/api/users', usersRoute)
 app.use('/api/pets', petsRoute)
