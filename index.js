@@ -48,9 +48,8 @@ app.use(cookieParser('asdasd'))
 
 app.use(cookieSession({
         secret: 'asdasd',
-        httpOnly: true,
+        httpOnly: false,
         sameSite: 'None',
-        domain: 'petsitterfinder.com.ar'
 }))
 
 app.use('/static', express.static('public'))
