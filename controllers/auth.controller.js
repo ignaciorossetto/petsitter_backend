@@ -26,10 +26,9 @@ export const login = async (req, res, next) => {
   const expireTime = 24 * 60 * 60 * 1000;
   res
     .cookie("access_token", access_token, {
-        sameSite: 'None',
-        secure: true,
-        domain: "petsitterfinder.com.ar",
-        signed: true
+      httpOnly: false,
+      secure: true,
+      sameSite: 'None'
     })
     .status(200)
     .json({
