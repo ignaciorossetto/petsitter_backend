@@ -26,9 +26,10 @@ export const login = async (req, res, next) => {
   const expireTime = 24 * 60 * 60 * 1000;
   res
     .cookie("access_token", access_token, {
-      httpOnly: false,
+      httpOnly: true,
       secure: true,
-      sameSite: 'None'
+      sameSite: 'None',
+      maxAge: expireTime
     })
     .status(200)
     .json({
