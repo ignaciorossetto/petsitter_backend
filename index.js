@@ -48,8 +48,6 @@ app.use(cookieParser('asdasd'))
 
 app.use(cookieSession({
         secret: 'asdasd',
-        httpOnly: false,
-        sameSite: 'None',
 }))
 
 app.use('/static', express.static('public'))
