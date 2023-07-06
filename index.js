@@ -53,6 +53,7 @@ app.use(cookieParser(config.cookieSecret))
 
 app.use(cookieSession({
         secret: config.cookieSecret,
+        keys: ['asdasd', 'qweqwe']
 }))
 
 app.use('/static', express.static('public'))
