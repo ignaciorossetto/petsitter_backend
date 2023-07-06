@@ -31,7 +31,6 @@ export default class Mail {
 
 
 export const confirmUserByMail = async(user) => {
-    console.log(user)
     const token = jwt.sign({ user }, config.jwtSecret + user.password, {
         expiresIn: "15m",
       });

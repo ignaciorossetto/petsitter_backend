@@ -23,5 +23,6 @@ export default {
         messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
         appId: process.env.FIREBASE_APP_ID,
         measurementId: process.env.FIREBASE_MESAUREMENT_ID
-      }
+      },
+    cookieSecret: process.env.COOKIE_SECRET
 }

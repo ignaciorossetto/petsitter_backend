@@ -49,10 +49,10 @@ app.use(
 
 //'https://www.petsitterfinder.com.ar/'
 
-app.use(cookieParser('asdasd'))
+app.use(cookieParser(config.cookieSecret))
 
 app.use(cookieSession({
-        secret: 'asdasd',
+        secret: config.cookieSecret,
 }))
 
 app.use('/static', express.static('public'))
