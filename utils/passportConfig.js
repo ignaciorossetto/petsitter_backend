@@ -120,7 +120,7 @@ const initializePassport = () => {
         {
         clientID: config.googleClientID,
         clientSecret: config.googleClientSecret,
-        callbackURL: `/api/auth/google/callback`, 
+        callbackURL: `${config.url}/api/auth/google/callback/`, 
         passReqToCallback: true,
         scope: [ 'profile', 'email' ],
         failureFlash: true,
