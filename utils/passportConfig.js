@@ -120,7 +120,7 @@ const initializePassport = () => {
         {
         clientID: config.googleClientID,
         clientSecret: config.googleClientSecret,
-        callbackURL: `${config.url}/api/auth/google/callback`,
+        callbackURL: `https://petsitterfinder-backend.onrender.com/api/auth/google/callback`,
         passReqToCallback: true,
         scope: [ 'profile', 'email' ],
         failureFlash: true,

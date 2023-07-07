@@ -61,12 +61,12 @@ export const googleLoginCallback = async (req, res) => {
   const access_token = generateToken(other._id +'@_@'+ other.username)
   const expireTime = 24 * 60 * 60 * 1000;
   res
-    .cookie("access_token", access_token, {
-      sameSite: "none",
-      secure: true,
-      maxAge: expireTime,
-      domain: '.petsitterfinder.com.ar'
-    })
+  .cookie("access_token", access_token, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+    maxAge: expireTime
+  })
     .redirect(`${config.feUrl}?login-google=true`);
 };
 
