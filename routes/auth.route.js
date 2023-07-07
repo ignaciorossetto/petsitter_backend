@@ -14,8 +14,8 @@ router.post('/resendConfirmationMail', resendConfirmationEmail)
 router.get('/checkauth',passportCall('jwt'), checkAuth)
 router.get('/updateUser',passportCall('jwt'), updateUserInfo)
 router.get('/logout', logOut)
-router.get('/google',passportCall('google', {prompt : "select_account"}), (req,res)=>{})
-router.get('/google/callback',passportCall('google', {failureRedirect: `${config.feUrl}/login?loginGoogle=failed`}), googleLoginCallback)
+router.get('/google',passportCall('google', {prompt : "select_account"}), (req,res)=>{console.log('hitted')})
+router.get('/google/callback', googleLoginCallback)
 router.get('/google/login',passportCall('jwt-google'), googleLoginAuthSendUser)
 
 
