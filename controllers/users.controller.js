@@ -1,5 +1,10 @@
 import { UserModel } from "../models/user.model.js";
+import config from "../utils/config.js";
 import { createError } from "../utils/error.js";
+import { initializeApp } from "firebase/app";
+import {getStorage, ref, getDownloadURL, uploadBytesResumable} from 'firebase/storage'
+
+
 
 
 
@@ -10,6 +15,7 @@ export const updateUser = async(req,res,next)=>{
             throw Error
         }
         res.status(200).json(response)
+        res.send('ok')
     } catch (error) {
         next(error)
     }
@@ -41,6 +47,31 @@ export const getUser = async(req,res, next)=>{
 export const getAllUsers = async(req,res, next)=>{
     try {
         const response = await UserModel.find()
+        if (!response) {
+            throw Error
+        }
+        res.status(200).json(response)
+        
+    } catch (error) {
+        next(createError(404, 'Users not found!'))
+    }
+}
+
+export const updateProfileImg = async(req,res,next) => {
+    const app = initializeApp(config.firebaseConfig);
+    const storage = getStorage()
+    const file = req.file
+    try {
+        const storageRef = ref(storage, `profile/${req.params.id}/profileImage/${file.originalname}`)
+        const metadata = {
+            contentType: file.mimetype
+        }
+        const snapshot = await uploadBytesResumable(storageRef, file.buffer, metadata)
+        const downloadURL = await getDownloadURL(snapshot.ref)
+        const obj = {
+            profileImg: downloadURL
+        }
+        const response = await UserModel.findByIdAndUpdate(req.params.id, {$set: obj}, {new:true}).populate('pets')
         if (!response) {
             throw Error
         }
