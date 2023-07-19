@@ -1,5 +1,5 @@
+import http from "http";
 import express from 'express'
-const app = express()
 import mongoose from 'mongoose'
 import authRoute from './routes/auth.route.js'
 import usersRoute from './routes/users.route.js'
@@ -13,11 +13,16 @@ import config from './utils/config.js'
 import cookieSession from 'cookie-session'
 import passport from 'passport'
 import initializePassport from './utils/passportConfig.js'
-
+import { Server } from 'socket.io';
+import WebSockets from "./utils/socket.js";
 import { ConversationModel } from './models/conversation.model.js'
 import { UserModel } from './models/user.model.js'
 import { MessageModel } from './models/message.model.js'
 import { PetModel } from './models/pet.model.js'
+
+const app = express()
+const port = config.port || "5000";
+app.set("port", port);
 
 const connectDB = async() => {
     try {
@@ -103,8 +108,20 @@ app.use((err,req,res,next)=>{
 })
 
 
-
-app.listen(config.port, async() => { 
+/** Create HTTP server. */
+const server = http.createServer(app);
+/** Create socket connection */
+global.io = new Server(server, {
+    cors: {
+      origin: "http://localhost:3000",
+      credentials: true
+    }});
+global.io.on('connection', WebSockets.connection)
+/** Listen on provided port, on all network interfaces. */
+server.listen(port);
+/** Event listener for HTTP server "listening" event. */
+server.on("listening", async() => {
     await connectDB()
     console.log(`Server running on port ${config.port}...`);
-})
+});
+

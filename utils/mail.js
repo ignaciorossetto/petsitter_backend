@@ -18,23 +18,33 @@ export default class Mail {
    
 
     send = async(user,subject, html) => {
-        const result = await this.transport.sendMail({
-            from: `PetSitterFinder <${config.mailUser}>`,
-            to: user.email,
-            subject: subject,
-            html
+        response = await new Promise((res,rej)=> {
+            this.transport.sendMail({
+                from: `PetSitterFinder <${config.mailUser}>`,
+                to: user.email,
+                subject: subject,
+                html
+            }, (err, info) => {
+                if (err) {
+                    console.log(err)
+                    rej(err)
+                } else {
+                    res(info)
+                }
+            })
         })
-        return result
+        console.log(response)
+        return response
     }
 
 }
 
 
-export const confirmUserByMail = async(user) => {
+export const confirmUserByMail = async(user, type) => {
     const token = jwt.sign({ user }, config.jwtSecret + user.password, {
         expiresIn: "15m",
       });
-      const link = `${config.feUrl}/sign-up/confirmation?token=${token}&email=${user.email}`;
+      const link = `${config.feUrl}/sign-up/confirmation?token=${token}&email=${user.email}&type=${type}`;
       const Mailer = new Mail();
       const html = ` 
       <h1>Hola ${user.username}</h1>

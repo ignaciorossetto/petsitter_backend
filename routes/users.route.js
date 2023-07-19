@@ -26,7 +26,7 @@ import uploadImgToServer from "../utils/multerConfig.js";
 
 
 //UPDATE USER
-router.put('/:id', verifyUser, updateUser)
+router.put('/:id', passportCall('jwt'), updateUser)
 //DELETE USER
 router.delete('/:id',verifyUser, deleteUser)
 //GET USER
@@ -34,7 +34,7 @@ router.get('/:id',passportCall('jwt'), getUser)
 //GET ALL USERS
 router.get('/',verifyAdmin, getAllUsers)
 //UPDATE USER PROFILEIMG
-router.post('/:id/profileImg', uploadImgToServer.single('profileImg'), updateProfileImg)
+router.post('/:id/profileImg', passportCall('jwt'), uploadImgToServer.single('profileImg'), updateProfileImg)
 
 
 

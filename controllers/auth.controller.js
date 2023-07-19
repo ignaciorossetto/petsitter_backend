@@ -1,21 +1,83 @@
+import { SitterModel } from "../models/sitter.model.js";
 import { UserModel } from "../models/user.model.js";
 import config from "../utils/config.js";
 import { createError } from "../utils/error.js";
+import { createHash } from "../utils/hashPass.js";
 import { checkMailConfirmation, confirmUserByMail } from "../utils/mail.js";
 import { generateToken } from "../utils/verifyToken.js";
+import { initializeApp } from "firebase/app";
+import {getStorage, ref, getDownloadURL, uploadBytesResumable} from 'firebase/storage'
+
 
 export const register = async (req, res, next) => {
+  console.log('req.file', req.file)
+  console.log('req.files', req.files)
   res.status(200).json({
     success: true,
-    payload: req.user,
+    payload: 'SUCCESS',
   });
 };
 
 export const sitterRegister = async (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    payload: req.user,
-  });
+  const latLng = JSON.parse(req.body.latLng)
+  try {
+    const user = await SitterModel.findOne({email: req.body.email})
+    if(user){
+      return res.status(401).json({
+        status: 'Bad request',
+        payload: 'Ya existe un usuario con ese email',
+      }) 
+    }
+    
+    const hashedPswd = createHash(req.body.password)
+    const obj = {
+      username: req.body.username,
+      password: hashedPswd,
+      addressFile: '',
+      email: req.body.email,
+      profileImg: '',
+      termsCheckBock: 'true',
+      newsCheckBox: 'false',
+      location: {
+        type: "Point",
+        coordinates: [latLng[0], latLng[1]],
+        address: req.body.address
+      },
+      strategy: 'local'
+    }
+    const newSitter = await SitterModel.create(obj)
+    if (newSitter) {
+      await confirmUserByMail(newSitter, 'sitter')
+      const app = initializeApp(config.firebaseConfig);
+      const storage = getStorage()
+      let updatedSitter 
+      for (let i = 0; i < req.files.length; i++) {
+        const element = req.files[i];
+        console.log(element.originalname)
+        const storageRef = ref(storage, `sitter/${newSitter._id}/${req.files[i].originalname}/${req.files[i].originalname}`)
+        const metadata = {
+            contentType: element.mimetype
+        }
+        const snapshot = await uploadBytesResumable(storageRef, element.buffer, metadata)
+        const downloadURL = await getDownloadURL(snapshot.ref)
+        if (element.originalname === 'addressFile') {
+          updatedSitter = await SitterModel.findByIdAndUpdate(newSitter._id, {addressFile: downloadURL}, {new:true})
+        } else {
+          updatedSitter = await SitterModel.findByIdAndUpdate(newSitter._id, {profileImg: downloadURL}, {new:true})
+        }
+        
+      }
+      const {password, ...other} = updatedSitter
+      res.json({
+        status: 'ok',
+        payload: other
+      })
+
+    }
+  } catch (error) {
+    console.log(error)
+    next(error)
+  }
 };
 
 export const login = async (req, res, next) => {
@@ -43,12 +105,14 @@ export const sitterLogin = async (req, res, next) => {
   if (!req.user) return res.status(401).send("Invalid credentials");
   const { password, ...other } = req.user._doc;
   const access_token = generateToken(other);
-  res.cookie("access_token", access_token, {
-    sameSite: "none",
-    secure: true,
-    maxAge: new Date(Date.now() + 900000),
-    domain: '.petsitterfinder.com.ar'
-  }).status(200).json({
+  const expireTime = 24 * 60 * 60 * 1000;
+  res
+    .cookie("access_token", access_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'None',
+      maxAge: expireTime
+    }).status(200).json({
     success: true,
     message: "Logged in",
     payload: other,
@@ -114,10 +178,13 @@ export const logOut = async (req, res, next) => {
 };
 
 export const checkAccountVerif = async (req,res,next) => { 
+  const type = req.body.type
   const token = req.body.token;
   const email = req.body.email;
+  console.log(type)
   try {
-    const user = await UserModel.findOne({email: email})
+    const user = type === 'sitter' ? await SitterModel.findOne({email: email}) : await UserModel.findOne({email: email})
+    console.log(user)
     if (!user) {
        next(createError(404, 'User not found!'))
        return
@@ -130,9 +197,15 @@ export const checkAccountVerif = async (req,res,next) => {
        next(createError(401, 'Token expired'))
     }
     try {
-      await UserModel.findByIdAndUpdate(user._id, {
-        confirmedAccount: true
-      })
+      if (type === 'sitter') {
+        await SitterModel.findByIdAndUpdate(user._id, {
+          confirmedAccount: true
+        })
+      } else {
+        await UserModel.findByIdAndUpdate(user._id, {
+          confirmedAccount: true
+        })
+      }
     } catch (error) {
       next(createError(500, 'Server error, try again later!'))
     }
@@ -146,8 +219,9 @@ export const checkAccountVerif = async (req,res,next) => {
 }
 
 export const resendConfirmationEmail = async(req,res,next) => {
+  const type = req.query.type
     try {
-      const user = await UserModel.findOne({email: req.body.email})
+      const user = type === 'sitter' ? await SitterModel.findOne({email: email}) : await UserModel.findOne({email: email})
       if (!user) {
         next(createError(404, 'Mail inexistente!'))
       }
@@ -163,3 +237,4 @@ export const resendConfirmationEmail = async(req,res,next) => {
       next(error)
     }
 }
+

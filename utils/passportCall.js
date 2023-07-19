@@ -10,6 +10,9 @@ const passportCall = (strategy, obj) => {
                 return next(err)
             }
             if(!user){
+                console.log('err: ' ,err)
+                console.log('user: ' ,user)
+                console.log('info: ' ,info)
                 return res.status(401).json({
                     error: info?.messages ? info?.messages : info?.toString()
                 })

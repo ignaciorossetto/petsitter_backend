@@ -19,12 +19,24 @@ createOrGetConv = async (req,res)=> {
         }
         res.status(200).json(response[0])
     } catch (error) {
-        createError(500, 'Could not send message')        
+        createError(500, 'Could not create conversation')        
     }
 }
 
 //Get all the conversations to rendered them in chatMenuu
-export const getAllConvs = async(req,res)=> {
+export const getAllSitterConvs = async(req,res)=> {
+    try {
+        const conv = await ConversationModel.find({
+            members: {$in : [req.params.userId]}
+        })
+        res.status(200).json(conv)
+    } catch (error) {
+        createError(500, 'Could not send message')         
+    }
+}
+
+//Get all the conversations to rendered them in chatMenuu
+export const getAllUserConvs = async(req,res)=> {
     try {
         const conv = await ConversationModel.find({
             members: {$in : [req.params.userId]}
@@ -36,9 +48,25 @@ export const getAllConvs = async(req,res)=> {
 }
 
 //Get the information of the receiver
-export const getReceiverInfo = async(req,res)=> {
+export const getSitterInfo = async(req,res)=> {
     try {
-            const friend = await SitterModel.findById(req.params?.friendId)
+            const friend = await SitterModel.findById(req.params?.sitterId)
+                const {password, ...other} = friend?._doc
+                return  res.status(200).json(other)
+        }
+        
+     catch (error) {
+        createError(500, 'Could not send message')        
+        
+    }
+
+}
+
+//Get the information of the receiver
+export const getUserInfo = async(req,res)=> {
+    console.log('hitted')
+    try {
+            const friend = await UserModel.findById(req.params?.userId)
                 const {password, ...other} = friend?._doc
                 return  res.status(200).json(other)
         }

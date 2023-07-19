@@ -11,8 +11,14 @@ const GeoSchema = new Schema({
     },
     coordinates: {
       type: [Number]
+    },
+    address: {
+        type: String
     }
   });  
+
+
+
 
 const SitterSchema = new Schema({
     username:{
@@ -31,6 +37,10 @@ const SitterSchema = new Schema({
         required: true,
         unique:true,
         immutable: true,
+    },
+    confirmedAccount: {
+        type: Boolean,
+        default:false
     },
     type: {
         type:String,
@@ -61,7 +71,10 @@ const SitterSchema = new Schema({
     },
     price: {
         type: Number
-    }
+    },
+    addressFile: {
+        type: String
+    },
 }, {timestamps: true})
 
 SitterSchema.index({location: '2dsphere'})

@@ -1,0 +1,16 @@
+1- PRIMERO HACER DOCKER FILE!
+2- correr el comandoen terminal:
+* -t: tag
+* . el punto significa dentro del directory
+docker build -t nombreproyecto .
+3- docker run -p 5000:5000 imagename
+
+
+
+
+
+***
+docker ps ---> muestra todos los contenedores qeu estan corriendo
+docker images ---> muestra las imagenes
+docker exec -it nombrecontenedor /bin/bash --> Entro al sistema operativo del contenedores
+    ps aux --> muestra todos los procesos que estan corriendo en el sistema operativo

@@ -53,6 +53,14 @@ export const getAllSitters = async (req, res, next) => {
   });
 };
 
+export const updateSitter = async (req, res, next) => {
+  const sitters = await SitterModel.find({});
+  res.json({
+    status: "ok",
+    payload: sitters,
+  });
+};
+
 export const deleteAllSitters = async (req, res, next) => {
   await SitterModel.deleteMany({});
   res.json({

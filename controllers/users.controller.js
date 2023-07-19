@@ -10,12 +10,12 @@ import {getStorage, ref, getDownloadURL, uploadBytesResumable} from 'firebase/st
 
 export const updateUser = async(req,res,next)=>{
     try {
-        const response = await UserModel.findByIdAndUpdate(req.params.id, {$set: req.body}, {new:true}) 
+        const response = await UserModel.findByIdAndUpdate(req.params.id, {$set: req.body}, {new:true}).populate('pets')
         if (!response) {
             throw Error
         }
-        res.status(200).json(response)
-        res.send('ok')
+        const {password, ...other} = response._doc
+        res.status(200).json(other)
     } catch (error) {
         next(error)
     }
@@ -75,6 +75,7 @@ export const updateProfileImg = async(req,res,next) => {
         if (!response) {
             throw Error
         }
+        const {password, ...other} = response._doc
         res.status(200).json(response)
         
     } catch (error) {
