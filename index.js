@@ -113,7 +113,7 @@ const server = http.createServer(app);
 /** Create socket connection */
 global.io = new Server(server, {
     cors: {
-      origin: config.feUrl,
+      origin:['http://localhost:3000','https://www.petsitterfinder.com.ar', 'https://www.petsitterfinder.com.ar/', 'https://api.petsitterfinder.com.ar', 'https://api.petsitterfinder.com.ar/'],
       credentials: true
     }});
 global.io.on('connection', WebSockets.connection)
