@@ -7,7 +7,7 @@ export default class Mail {
     constructor() {
         this.transport = nodemailer.createTransport({
             service: 'gmail',
-            port: 587,
+            port: 465,
             auth:{
                 user: config.mailUser,
                 pass: config.mailPassword
