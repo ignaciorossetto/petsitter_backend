@@ -8,6 +8,7 @@ export default class Mail {
         this.transport = nodemailer.createTransport({
             service: 'gmail',
             port: 465,
+            secure: true,
             auth:{
                 user: config.mailUser,
                 pass: config.mailPassword
@@ -26,14 +27,14 @@ export default class Mail {
                 html
             }, (err, info) => {
                 if (err) {
-                    console.log(err)
+                    console.log('err nodemailer:', err)
                     rej(err)
                 } else {
                     res(info)
                 }
             })
         })
-        console.log(response)
+        console.log('response: ', response)
         return response
     }
 
