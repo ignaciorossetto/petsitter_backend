@@ -113,7 +113,7 @@ const server = http.createServer(app);
 /** Create socket connection */
 global.io = new Server(server, {
     cors: {
-      origin: "http://localhost:3000",
+      origin: config.feUrl,
       credentials: true
     }});
 global.io.on('connection', WebSockets.connection)
