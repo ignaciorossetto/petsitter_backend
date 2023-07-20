@@ -9,12 +9,10 @@ export default class Mail {
             service: 'gmail',
             port: 465,
             secure: true,
-            providerauth: {user: 'your-gmail@gmail.com'},
-            pass: config.mailPassword
-            // auth:{
-            //     user: config.mailUser,
-            //     pass: config.mailPassword
-            // }
+            auth:{
+                user: config.mailUser,
+                pass: config.mailPassword
+            }
         })
     }
 
