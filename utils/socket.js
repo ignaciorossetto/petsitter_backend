@@ -6,7 +6,6 @@ class WebSockets {
     connection(client) {
       // event fired when the chat room is disconnected
       client.on("disconnect", () => {
-        console.log('disconnected')
         this.users = this.users?.filter((user) => user.socketId !== client.id);
       });
       // add identity of user mapped to the socket id
@@ -19,7 +18,6 @@ class WebSockets {
               socketId: client.id,
               userId: userId,
             });
-        console.log(this.users)
 
       });
       client.on("logout", () => {
@@ -30,9 +28,7 @@ class WebSockets {
         const otherUserID = data.otherUserId
         const message = data.message
         const otherUser = this.users.filter((e)=>e.userId === otherUserID)
-        console.log(otherUser[0])
-        console.log(data)
-        console.log('this.users: ', this.users)
+
         global.io.to(otherUser[0]?.socketId).emit('getMessage',{ 
             senderId: senderId,
             message: message

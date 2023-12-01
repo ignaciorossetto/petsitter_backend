@@ -19,7 +19,6 @@ export default class Mail {
    
 
     send = async(user,subject, html) => {
-        console.log('config: ', config)
         response = await new Promise((res,rej)=> {
             this.transport.sendMail({
                 from: `PetSitterFinder <${config.mailUser}>`,
@@ -28,14 +27,12 @@ export default class Mail {
                 html
             }, (err, info) => {
                 if (err) {
-                    console.log('err nodemailer:', err)
                     rej(err)
                 } else {
                     res(info)
                 }
             })
         })
-        console.log('response: ', response)
         return response
     }
 

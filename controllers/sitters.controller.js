@@ -1,6 +1,9 @@
 import { createError } from "../utils/error.js";
 import { SitterModel } from "../models/sitter.model.js";
 import { faker } from "@faker-js/faker";
+import { initializeApp } from "firebase/app";
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import config from "../utils/config.js";
 
 const generateRandomHouse = (position) => {
   let direction = Math.random() < 0.5 ? -20 : 20
@@ -53,13 +56,18 @@ export const getAllSitters = async (req, res, next) => {
   });
 };
 
-export const updateSitter = async (req, res, next) => {
-  const sitters = await SitterModel.find({});
-  res.json({
-    status: "ok",
-    payload: sitters,
-  });
-};
+export const updateSitter = async(req,res,next)=>{
+  try {
+      const response = await SitterModel.findByIdAndUpdate(req.params.id, {$set: req.body}, {new:true})
+      if (!response) {
+          throw Error
+      }
+      const {password, ...other} = response._doc
+      res.status(200).json(other)
+  } catch (error) {
+      next(error)
+  }
+}
 
 export const deleteAllSitters = async (req, res, next) => {
   await SitterModel.deleteMany({});
@@ -91,5 +99,32 @@ export const getSittersNearby = async (req, res, next) => {
     payload: response,
   });
 };
+
+
+export const updateProfileImg = async(req,res,next) => {
+  const app = initializeApp(config.firebaseConfig);
+  const storage = getStorage()
+  const file = req.file
+  try {
+      const storageRef = ref(storage, `profile/${req.params.id}/profileImage/${file.originalname}`)
+      const metadata = {
+          contentType: file.mimetype
+      }
+      const snapshot = await uploadBytesResumable(storageRef, file.buffer, metadata)
+      const downloadURL = await getDownloadURL(snapshot.ref)
+      const obj = {
+          profileImg: downloadURL
+      }
+      const response = await SitterModel.findByIdAndUpdate(req.params.id, {$set: obj}, {new:true})
+      if (!response) {
+          throw Error
+      }
+      const {password, ...other} = response._doc
+      res.status(200).json(response)
+      
+  } catch (error) {
+      next(createError(404, 'Users not found!'))
+  }
+}
 
 

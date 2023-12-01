@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { createOrGetConv, getAllSitterConvs, getAllUserConvs, getSitterInfo,  getUserInfo} from '../controllers/conversations.controller.js'
+import { createOrGetConv, getConvs, getSitterInfo, getUserInfo} from '../controllers/conversations.controller.js'
 import passportCall from '../utils/passportCall.js'
 const router = Router()
 
@@ -7,11 +7,8 @@ const router = Router()
 //Create new conversation or response the existing one
 router.post('/', passportCall('jwt'), createOrGetConv)
 
-//Get all the sitter conversations to render them in chatMenuu
-router.get('/user/current/:userId', passportCall('jwt'),  getAllSitterConvs)
-
-//Get all the user conversations to render them in chatMenuu
-router.get('/sitter/current/:sitterId', passportCall('jwt'),  getAllUserConvs)
+//Get all conversations of a sitter/user to display in chat menu
+router.get('/all/:userId', passportCall('jwt'),  getConvs)
 
 //Get the information of a sitter
 router.get('/user/sitter/:sitterId', passportCall('jwt'), getSitterInfo)

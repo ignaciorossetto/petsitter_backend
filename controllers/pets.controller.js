@@ -52,11 +52,8 @@ export const createPet = async(req,res, next) => {
 
 
 export const updatePet = async(req,res, next)=>{
-    console.log(req.body);
-    console.log(req.params);
     try {
         const response = await PetModel.findByIdAndUpdate(req.params.pid, {$set: req.body}, {new:true})
-          console.log(response);
         res.status(200).json(response)
     } catch (error) {
         next(error)

@@ -1,5 +1,4 @@
 import mongoose, { Schema } from "mongoose";
-import config from '../utils/config.js'
 
 
 const sitterCollection = 'sitters'
@@ -15,6 +14,8 @@ const GeoSchema = new Schema({
     address: {
         type: String
     }
+  }, {
+    _id: false
   });  
 
 

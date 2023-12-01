@@ -79,6 +79,6 @@ export const updateProfileImg = async(req,res,next) => {
         res.status(200).json(response)
         
     } catch (error) {
-        next(createError(404, 'Users not found!'))
+        next(createError(404, error))
     }
 }

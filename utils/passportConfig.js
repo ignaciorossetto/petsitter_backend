@@ -42,7 +42,7 @@ const initializePassport = () => {
             req.user = result
             return done(null, result) 
         } catch (error) {
-            console.log(error);
+            done(error, false)
         }
     }
     ))
@@ -51,11 +51,9 @@ const initializePassport = () => {
         usernameField: 'email'
     },
     async(req,username,password,done)=>{
-        console.log('hitted')
         try {
             const user = await SitterModel.findOne({email: username})
             if(user){
-                console.log(user)
                 return done(null, false, {messages: 'Usuario registrado, proba con otro email!'})
             }
             const hash = createHash(password)
@@ -67,14 +65,10 @@ const initializePassport = () => {
                 newsCheckBox: req.body.newsCheckBox,
                 fullAddress: req.body.fullAddress
             }
-            console.log('reqfiles: ', req.files)
-            console.log('reqfile: ', req.file)
-            // const result = await SitterModel.create(newUser)
-            // await confirmUserByMail(result)
-            // req.user = result
+
             return done(null, 'result') 
         } catch (error) {
-            console.log(error);
+            done(error, false)
         }
     }
     ))
@@ -102,19 +96,15 @@ const initializePassport = () => {
     passport.use('sitter-login', new LocalStrategy({
         usernameField: 'email'
     },async(username,password,done)=>{
-        console.log('hola')
         try {
             const user = await SitterModel.findOne({email: username})
-            console.log(user)
             if (!user) {
                 return done(null, false, {messages: 'Error en usuario/contraseña'})
             }
             if (user.strategy !== 'local') {
                 return done(null, false, {messages: 'Usuario generado a traves de otra plataforma'})   
             }
-            // if(!isValidPassword(user, password)){
-            //     return done(null, false, {messages: 'Error en usuario/contraseña'})
-            // }
+
             done(null, user)   
         } catch (error) {
             done(error)
@@ -159,7 +149,7 @@ const initializePassport = () => {
                 req.user = result
                 return done(null, result)
             } catch (error) {
-                console.log(error);
+                return done(error)
             }
          }
       ))
@@ -168,6 +158,7 @@ const initializePassport = () => {
         jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
         secretOrKey: config.jwtSecret,
     }, (jwt_payload, done)=> {
+
         try {
             return done(null, jwt_payload)
         } catch (error) {

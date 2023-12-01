@@ -10,8 +10,6 @@ import {getStorage, ref, getDownloadURL, uploadBytesResumable} from 'firebase/st
 
 
 export const register = async (req, res, next) => {
-  console.log('req.file', req.file)
-  console.log('req.files', req.files)
   res.status(200).json({
     success: true,
     payload: 'SUCCESS',
@@ -53,7 +51,6 @@ export const sitterRegister = async (req, res, next) => {
       let updatedSitter 
       for (let i = 0; i < req.files.length; i++) {
         const element = req.files[i];
-        console.log(element.originalname)
         const storageRef = ref(storage, `sitter/${newSitter._id}/${req.files[i].originalname}/${req.files[i].originalname}`)
         const metadata = {
             contentType: element.mimetype
@@ -75,7 +72,6 @@ export const sitterRegister = async (req, res, next) => {
 
     }
   } catch (error) {
-    console.log(error)
     next(error)
   }
 };
@@ -87,35 +83,25 @@ export const login = async (req, res, next) => {
   // Expire of cookie time: 15 min ---- is different than the one of jwt
   const expireTime = 24 * 60 * 60 * 1000;
   res
-    .cookie("access_token", access_token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'None',
-      maxAge: expireTime
-    })
     .status(200)
     .json({
       success: true,
       message: "Logged in",
       payload: other,
+      token: access_token
     });
 };
 
 export const sitterLogin = async (req, res, next) => {
   if (!req.user) return res.status(401).send("Invalid credentials");
   const { password, ...other } = req.user._doc;
-  const access_token = generateToken(other);
+  const access_token = generateToken(other._id +'@_@'+ other.username);
   const expireTime = 24 * 60 * 60 * 1000;
-  res
-    .cookie("access_token", access_token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'None',
-      maxAge: expireTime
-    }).status(200).json({
+  res.status(200).json({
     success: true,
     message: "Logged in",
     payload: other,
+    token: access_token
   });
 };
 
@@ -181,10 +167,8 @@ export const checkAccountVerif = async (req,res,next) => {
   const type = req.body.type
   const token = req.body.token;
   const email = req.body.email;
-  console.log(type)
   try {
     const user = type === 'sitter' ? await SitterModel.findOne({email: email}) : await UserModel.findOne({email: email})
-    console.log(user)
     if (!user) {
        next(createError(404, 'User not found!'))
        return
