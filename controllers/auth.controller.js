@@ -117,7 +117,7 @@ export const googleLoginCallback = async (req, res) => {
     sameSite: 'None',
     maxAge: expireTime
   })
-    .redirect(`${config.feUrl}?login-google=true`);
+    .redirect(`${config.feUrl}?login-google=true&access_token=${access_token}`);
 };
 
 export const updateUserInfo = async (req, res, next) => {
