@@ -1,7 +1,6 @@
 import {ConversationModel} from '../models/conversation.model.js'
 import {UserModel} from '../models/user.model.js'
 import {SitterModel} from '../models/sitter.model.js'
-import { createError } from '../utils/error.js'
 
 
 //Create new conversation or response the existing one
@@ -19,7 +18,7 @@ createOrGetConv = async (req,res)=> {
         }
         res.status(200).json(response[0])
     } catch (error) {
-        createError(500, 'Could not create conversation')        
+        next(error)        
     }
 }
 
@@ -31,7 +30,7 @@ export const getConvs = async(req,res)=> {
         })
         res.status(200).json(conv)
     } catch (error) {
-        createError(500, 'Could not send message')         
+        next(error)       
     }
 }
 
@@ -45,7 +44,7 @@ export const getSitterInfo = async(req,res)=> {
         }
         
      catch (error) {
-        createError(500, 'Could not send message')        
+        next(error)        
         
     }
 
@@ -60,7 +59,7 @@ export const getUserInfo = async(req,res)=> {
         }
         
      catch (error) {
-        createError(500, 'Could not send message')        
+        next(error)        
         
     }
 

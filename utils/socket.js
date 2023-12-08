@@ -35,6 +35,22 @@ class WebSockets {
             });
       });
 
+      client.on("sendProposal", (data) => {
+        console.log('hitted sendProposal')
+        console.log(data)
+        const senderId = data.sitterId
+        const otherUserID = data.userId
+        const message = data
+        const otherUser = this.users.filter((e)=>e.userId === otherUserID)
+        console.log('this.users: ', this.users)
+        console.log(otherUser)
+
+        global.io.to(otherUser[0]?.socketId).emit('getProposal',{ 
+            senderId: senderId,
+            message: message
+            });
+      })
+
       global.io.emit('welcome', 'welcome message!!')
 
 

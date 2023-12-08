@@ -21,6 +21,8 @@ const PetSchema = new Schema({
     },
     size:{
         type:String,
+        required:true,
+        enum: ['S', 'M', 'L']
     },
     images:{
         type:[String],
@@ -35,10 +37,12 @@ const PetSchema = new Schema({
     },
     age:{
         type:String,
-        required:true
+        required:true,
+        enum: ['very-young', 'young', 'adult', 'elder']
     },
     sex:{
         type:String,
+        enum: ['female', 'male'],
         required:true
     },
     featured:{

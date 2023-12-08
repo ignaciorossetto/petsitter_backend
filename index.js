@@ -7,6 +7,7 @@ import petsRoute from './routes/pets.route.js'
 import sittersRoute from './routes/sitters.route.js'
 import conversationRoute from './routes/conversations.route.js'
 import messageRoute from './routes/messages.route.js'
+import ordersRoute from './routes/careOrder.route.js'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import config from './utils/config.js'
@@ -95,6 +96,7 @@ app.use('/api/pets', petsRoute)
 app.use('/api/sitters', sittersRoute)
 app.use('/api/conversations', conversationRoute)
 app.use('/api/messages', messageRoute)
+app.use('/api/care-orders', ordersRoute)
 
 app.use((err,req,res,next)=>{
     const errorStatus = err.status || 500

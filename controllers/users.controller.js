@@ -31,29 +31,21 @@ export const deleteUser = async(req,res,next)=>{
 export const getUser = async(req,res, next)=>{
     try {
         const response = await UserModel.findById(req.params.id)
-        if (!response) {
-            throw Error
-        }
-        if(req.query.pass){
-            const {password, ...other} = response._doc
-            req.user = other
-            res.status(200).json(other)
-        }
+        if (!response) createError(404, 'User not found!')
+        const {password, ...other} = response._doc
+        req.user = other
+        res.status(200).json(other)
     } catch (error) {
-        next(createError(404, 'User not found!'))
-
+        next(error)
     }
 }
 export const getAllUsers = async(req,res, next)=>{
     try {
-        const response = await UserModel.find()
-        if (!response) {
-            throw Error
-        }
+        const response = await UserModel.find({})
+        if (!response) createError(404, 'Users not found!')
         res.status(200).json(response)
-        
     } catch (error) {
-        next(createError(404, 'Users not found!'))
+        next(error)
     }
 }
 
@@ -72,13 +64,11 @@ export const updateProfileImg = async(req,res,next) => {
             profileImg: downloadURL
         }
         const response = await UserModel.findByIdAndUpdate(req.params.id, {$set: obj}, {new:true}).populate('pets')
-        if (!response) {
-            throw Error
-        }
+        if (!response) createError(404, "Not found!")
         const {password, ...other} = response._doc
         res.status(200).json(response)
         
     } catch (error) {
-        next(createError(404, error))
+        next(error)
     }
 }

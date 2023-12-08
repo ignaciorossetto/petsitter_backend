@@ -170,15 +170,15 @@ export const checkAccountVerif = async (req,res,next) => {
   try {
     const user = type === 'sitter' ? await SitterModel.findOne({email: email}) : await UserModel.findOne({email: email})
     if (!user) {
-       next(createError(404, 'User not found!'))
+       createError(404, 'User not found!')
        return
     }
     if(user?.confirmedAccount) {
-      next(createError(400, 'User is already confirmed!'))
+      createError(400, 'User is already confirmed!')
     }
     const userAuth = checkMailConfirmation(token, user)
     if (!userAuth) {
-       next(createError(401, 'Token expired'))
+       createError(401, 'Token expired')
     }
     try {
       if (type === 'sitter') {
@@ -191,7 +191,7 @@ export const checkAccountVerif = async (req,res,next) => {
         })
       }
     } catch (error) {
-      next(createError(500, 'Server error, try again later!'))
+      createError(500, 'Server error, try again later!')
     }
     res.json({
       status: 200,
@@ -207,10 +207,10 @@ export const resendConfirmationEmail = async(req,res,next) => {
     try {
       const user = type === 'sitter' ? await SitterModel.findOne({email: email}) : await UserModel.findOne({email: email})
       if (!user) {
-        next(createError(404, 'Mail inexistente!'))
+        createError(404, 'Mail inexistente!')
       }
       if(user?.confirmedAccount) {
-        next(createError(400, 'Usuario ya está confirmado!'))
+        createError(400, 'Usuario ya está confirmado!')
       }
       await confirmUserByMail(user)
       res.json({

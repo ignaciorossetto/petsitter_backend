@@ -16,6 +16,7 @@ const generateRandomHouse = (position) => {
 };
 
 export const createSitters = async (req, res, next) => {
+  
   const quantity = 15;
   let users = [];
   for (let i = 0; i < quantity; i++) {
@@ -49,11 +50,16 @@ export const createSitters = async (req, res, next) => {
 };
 
 export const getAllSitters = async (req, res, next) => {
-  const sitters = await SitterModel.find({});
-  res.json({
-    status: "ok",
-    payload: sitters,
-  });
+  try {
+    const sitters = await SitterModel.find({});
+    res.json({
+      status: "ok",
+      payload: sitters,
+    });
+    
+  } catch (error) {
+    next(error)
+  }
 };
 
 export const updateSitter = async(req,res,next)=>{
@@ -77,27 +83,32 @@ export const deleteAllSitters = async (req, res, next) => {
 };
 
 export const getSittersNearby = async (req, res, next) => {
-  const radius = req.query.radius
-  const obj = {
-    lat: req.query.lat,
-    lng: req.query.lng,
-  };
-  const response = await SitterModel.find({
-    location: {
-      $near: {
-        $maxDistance: radius,
-        $geometry: {
-          type: "Point",
-          coordinates: [obj.lng, obj.lat],
+  try {
+    const radius = req.query.radius
+    const obj = {
+      lat: req.query.lat,
+      lng: req.query.lng,
+    };
+    const response = await SitterModel.find({
+      location: {
+        $near: {
+          $maxDistance: radius,
+          $geometry: {
+            type: "Point",
+            coordinates: [obj.lng, obj.lat],
+          },
         },
       },
-    },
-  });
-
-  res.json({
-    status: "ok",
-    payload: response,
-  });
+    });
+  
+    res.json({
+      status: "ok",
+      payload: response,
+    });
+    
+  } catch (error) {
+    next(error)
+  }
 };
 
 
@@ -117,13 +128,13 @@ export const updateProfileImg = async(req,res,next) => {
       }
       const response = await SitterModel.findByIdAndUpdate(req.params.id, {$set: obj}, {new:true})
       if (!response) {
-          throw Error
+        createError(404, 'Users not found!')
       }
       const {password, ...other} = response._doc
       res.status(200).json(response)
       
   } catch (error) {
-      next(createError(404, 'Users not found!'))
+      next(error)
   }
 }
 

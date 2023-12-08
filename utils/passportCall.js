@@ -1,5 +1,4 @@
 import passport from 'passport'
-import { createError } from './error.js'
 
 
 const passportCall = (strategy, obj) => {
