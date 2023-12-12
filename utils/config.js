@@ -24,5 +24,10 @@ export default {
         appId: process.env.FIREBASE_APP_ID,
         measurementId: process.env.FIREBASE_MESAUREMENT_ID
       },
-    cookieSecret: process.env.COOKIE_SECRET
+    cookieSecret: process.env.COOKIE_SECRET,
+    mercadoPago: {
+      accessToken_test: process.env.MERCADO_PAGO_ACCESS_TOKEN_TEST,
+      accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN,
+
+    }
 }

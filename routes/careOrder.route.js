@@ -2,6 +2,7 @@ import Router from 'express'
 import { CareOrderModel } from '../models/careOrder.model.js'
 import { createError } from '../utils/error.js'
 import passportCall from '../utils/passportCall.js'
+import { newPreferenceId } from '../utils/mercadopago.js'
 
 const router = Router()
 
@@ -18,11 +19,15 @@ router.get('/',  async(req,res,next)=> {
             ...userId,
             ...paymentStatus
         }
-        console.log(filter)
         const orders = await CareOrderModel.find(filter)
+        let preferenceId
+        if (orders.length > 0) {
+            preferenceId = await newPreferenceId(orders[0])
+        }
         res.json({
             status: 'OK',
-            payload: orders
+            payload: orders,
+            preferenceId: preferenceId || null
         })
     } catch (error) {
         next(error)
@@ -80,10 +85,12 @@ router.post('/', async(req,res,next)=> {
                 }
             })
         }   
+        const preferenceId = await newPreferenceId(order)
         const newOrder = await CareOrderModel.create(order)
         res.json({
             status: 'OK',
-            payload: newOrder
+            payload: newOrder,
+            preferenceId: preferenceId
         })
     } catch (error) {
         console.log(error)
