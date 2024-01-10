@@ -30,6 +30,7 @@ router.get('/',  async(req,res,next)=> {
             preferenceId: preferenceId || null
         })
     } catch (error) {
+        console.log(error)
         next(error)
     }
 })
